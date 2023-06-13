@@ -1,0 +1,24 @@
+import { Prop, Schema } from '@nestjs/mongoose';
+
+@Schema({
+  timestamps: true,
+})
+export class Message extends Document {
+  @Prop()
+  conversation: string;
+
+  @Prop()
+  sender: string;
+
+  @Prop()
+  receiver: string;
+
+  @Prop()
+  content: string;
+
+  @Prop()
+  unsend: boolean;
+
+  @Prop()
+  removers: string[];
+}

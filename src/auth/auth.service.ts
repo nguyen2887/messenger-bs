@@ -1,25 +1,63 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from './schemas/user.schema';
+import { Model } from 'mongoose';
+import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { SignUpDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @InjectModel(User.name)
+    private userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
 
-  async signIn(username: string, pass: string) {
-    const user = await this.usersService.findOne(username);
+  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
+    const { name, email, password } = signUpDto;
 
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
+    const userExists = await this.userModel.findOne({ email });
+
+    if (userExists) {
+      throw new ConflictException('This email is registered already');
     }
 
-    const payload = { sub: user.userId, username: user.username };
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+    const user = await this.userModel.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    const token = this.jwtService.sign({ id: user._id });
+
+    return { token };
+  }
+
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
+    const { email, password } = loginDto;
+
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email');
+    }
+
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatched) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    const token = this.jwtService.sign({ id: user._id });
+
+    return { token };
   }
 }
