@@ -5,16 +5,13 @@ import { Prop, Schema } from '@nestjs/mongoose';
 })
 export class Conversation extends Document {
   @Prop()
-  sender: string;
+  users: string[];
 
   @Prop()
-  receiver: string;
+  isGroup: boolean;
 
   @Prop()
-  content: string;
-
-  @Prop()
-  unsend: boolean;
+  read: boolean[];
 
   @Prop()
   removers: string[];
