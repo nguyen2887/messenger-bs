@@ -1,4 +1,5 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Schema({
   timestamps: true,
@@ -8,11 +9,7 @@ export class Conversation extends Document {
   users: string[];
 
   @Prop()
-  isGroup: boolean;
-
-  @Prop()
-  read: boolean[];
-
-  @Prop()
-  removers: string[];
+  archivedBy: string[];
 }
+
+export const ConversationSchema = SchemaFactory.createForClass(Conversation);
