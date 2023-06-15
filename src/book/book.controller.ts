@@ -25,6 +25,7 @@ export class BookController {
   constructor(private bookService: BookService) {}
 
   @ApiQuery({ name: 'keyword', type: 'string', required: false })
+  @ApiQuery({ name: 'page', type: 'string', required: false })
   @Get()
   async getAllBooks(@Query() query: ExpressQuery): Promise<Book[]> {
     return this.bookService.findAll(query);

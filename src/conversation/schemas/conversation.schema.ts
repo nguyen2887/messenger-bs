@@ -1,15 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 
 @Schema({
   timestamps: true,
 })
-export class Conversation extends Document {
+export class Conversation {
   @Prop()
   users: string[];
 
-  @Prop()
+  @Prop({ default: [] })
   archivedBy: string[];
+
+  @Prop({ default: [] })
+  unreadBy: string[];
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

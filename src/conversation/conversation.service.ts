@@ -19,15 +19,12 @@ export class ConversationService {
     return await this.conversationModel.find().limit(resPerPage).skip(skip);
   }
 
-  async create(conversation: Conversation): Promise<Conversation> {
-    return await this.conversationModel.create(conversation);
+  async create(item: Conversation): Promise<Conversation> {
+    return await this.conversationModel.create(item);
   }
 
-  async updateById(
-    id: string,
-    conversation: Conversation,
-  ): Promise<Conversation> {
-    return await this.conversationModel.findByIdAndUpdate(id, conversation, {
+  async updateById(id: string, item: Conversation): Promise<Conversation> {
+    return await this.conversationModel.findByIdAndUpdate(id, item, {
       new: true,
       runValidators: true,
     });

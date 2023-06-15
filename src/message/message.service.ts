@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { Message } from './schemas/message.schema';
 import { Query } from 'express-serve-static-core';
 
@@ -17,5 +17,16 @@ export class MessageService {
     const skip = resPerPage * (currentPage - 1);
 
     return await this.messageModel.find().limit(resPerPage).skip(skip);
+  }
+
+  async create(item: Message): Promise<Message> {
+    return await this.messageModel.create(item);
+  }
+
+  async updateById(id: string, item: Message): Promise<Message> {
+    return await this.messageModel.findByIdAndUpdate(id, item, {
+      new: true,
+      runValidators: true,
+    });
   }
 }
