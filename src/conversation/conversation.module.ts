@@ -4,6 +4,7 @@ import { ConversationController } from './conversation.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConversationSchema } from './schemas/conversation.schema';
+import { ConversationGateway } from './conversation.gateway';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { ConversationSchema } from './schemas/conversation.schema';
       },
     ]),
   ],
-  providers: [ConversationService],
+  providers: [ConversationService, ConversationGateway],
   controllers: [ConversationController],
 })
 export class ConversationModule {}
