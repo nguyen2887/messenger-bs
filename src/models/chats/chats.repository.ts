@@ -14,9 +14,9 @@ export class ChatsRepository extends Repository<Chat> {
   }
 
   async createChat(createChatDto: CreateChatDto) {
-    const { members } = createChatDto;
+    const { participants } = createChatDto;
 
-    const chat = this.create({ members });
+    const chat = this.create({ participants });
 
     try {
       const chat2 = await this.save(chat);
@@ -44,12 +44,6 @@ export class ChatsRepository extends Repository<Chat> {
       if (!chat) {
         throw 'Chat not found';
       }
-
-      if (!chat.messages) {
-        chat.messages = [];
-      }
-
-      chat.messages.push(message);
 
       await this.save(chat);
     } catch (error) {

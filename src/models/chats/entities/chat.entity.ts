@@ -1,14 +1,14 @@
-import { Entity, ObjectIdColumn, Column, ObjectId } from 'typeorm';
-import { Message } from './message.entity';
+import { BaseMongo } from 'src/common/base-mongo.entity';
+import { Entity, Column, ObjectId } from 'typeorm';
 
 @Entity()
-export class Chat {
-  @ObjectIdColumn()
-  _id: ObjectId;
-
+export class Chat extends BaseMongo {
   @Column()
-  members: string[];
+  participants: ObjectId[];
 
-  @Column(() => Message)
-  messages: Message[];
+  @Column({ default: '' })
+  name: string;
+
+  @Column({ default: false })
+  is_group: boolean;
 }

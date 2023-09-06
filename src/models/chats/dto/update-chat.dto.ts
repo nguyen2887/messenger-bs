@@ -1,4 +1,4 @@
-import { Message } from '../entities/message.entity';
+import { Message } from '../../messages/entities/message.entity';
 
 export class UpdateChatDto {
   //   @IsArray()

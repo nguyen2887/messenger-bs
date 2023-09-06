@@ -3,6 +3,7 @@ import { Chat } from './entities/chat.entity';
 import { ChatsRepository } from './chats.repository';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class ChatsService {
@@ -11,7 +12,7 @@ export class ChatsService {
   getAllChatsByUser(userId: string): Promise<Chat[]> {
     return this.chatsRepository.find({
       where: {
-        members: userId,
+        participants: new ObjectId(userId),
       },
     });
   }

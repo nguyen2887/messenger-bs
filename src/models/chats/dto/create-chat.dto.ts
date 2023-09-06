@@ -4,5 +4,5 @@ export class CreateChatDto {
   @IsNotEmpty()
   @IsArray()
   @ArrayMinSize(2)
-  members: string[];
+  participants: string[];
 }

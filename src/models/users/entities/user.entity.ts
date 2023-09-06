@@ -1,13 +1,20 @@
-import { Entity, ObjectIdColumn, ObjectId, Column } from 'typeorm';
+import { BaseMongo } from 'src/common/base-mongo.entity';
+import { Entity, Column } from 'typeorm';
 
 @Entity()
-export class User {
-  @ObjectIdColumn()
-  _id: ObjectId;
+export class User extends BaseMongo {
+  @Column()
+  username: string;
 
   @Column()
-  firstName: string;
+  email: string;
 
   @Column()
-  lastName: string;
+  password: string;
+
+  @Column()
+  avatar: string = '';
+
+  @Column()
+  is_online: boolean = false;
 }
