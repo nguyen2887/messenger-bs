@@ -8,8 +8,13 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 
-  @Get('/:userId')
-  getAllChatsByUser(@Param('userId') userId: string): Promise<Chat[]> {
+  @Get('/:id')
+  getChatById(@Param('id') id: string): Promise<Chat> {
+    return this.chatsService.getChatById(id);
+  }
+
+  @Get('/user/:id')
+  getAllChatsByUser(@Param('id') userId: string): Promise<Chat[]> {
     return this.chatsService.getAllChatsByUser(userId);
   }
 

@@ -6,9 +6,9 @@ export class Chat extends BaseMongo {
   @Column()
   participants: ObjectId[];
 
-  @Column({ default: '' })
-  name: string;
+  @Column()
+  name: string = '';
 
-  @Column({ default: false })
-  is_group: boolean;
+  @Column()
+  is_group: boolean = false;
 }

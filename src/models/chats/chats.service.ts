@@ -17,6 +17,10 @@ export class ChatsService {
     });
   }
 
+  getChatById(id: string): Promise<Chat> {
+    return this.chatsRepository.getChatById(id);
+  }
+
   createChat(createChatDto: CreateChatDto) {
     return this.chatsRepository.createChat(createChatDto);
   }

@@ -1,4 +1,10 @@
-import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  Logger,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Chat } from './entities/chat.entity';
 import { ObjectId } from 'mongodb';
@@ -13,15 +19,21 @@ export class ChatsRepository extends Repository<Chat> {
     super(Chat, dataSource.createEntityManager());
   }
 
-  async createChat(createChatDto: CreateChatDto) {
+  async getChatById(id: string): Promise<Chat> {
+    const chat = await this.findOneBy({ _id: new ObjectId(id) });
+
+    if (!chat) throw new NotFoundException(`Chat ${id} not found`);
+
+    return chat;
+  }
+
+  createChat(createChatDto: CreateChatDto): Promise<Chat> {
     const { participants } = createChatDto;
 
     const chat = this.create({ participants });
 
     try {
-      const chat2 = await this.save(chat);
-
-      console.log(chat2);
+      return this.save(chat);
     } catch (error) {
       this.logger.error(error);
 
@@ -29,23 +41,27 @@ export class ChatsRepository extends Repository<Chat> {
     }
   }
 
-  async updateChat(chatId: string, updateChatDto: UpdateChatDto) {
-    const { message } = updateChatDto;
+  async updateChat(id: string, updateChatDto: UpdateChatDto): Promise<Chat> {
+    const { is_group, name, participants } = updateChatDto;
+
+    const chat = await this.getChatById(id);
+
+    chat.is_group = is_group;
+
+    if (name) {
+      if (chat.is_group) {
+        chat.name = name;
+      } else {
+        throw new BadRequestException(
+          'Only chat, which is group, can be named',
+        );
+      }
+    }
+
+    chat.participants = participants.map((stringId) => new ObjectId(stringId));
 
     try {
-      console.log(chatId, message);
-
-      const chat = await this.findOneBy({
-        _id: new ObjectId('64f83d1a736c78022fd03679'),
-      });
-
-      console.log(chat);
-
-      if (!chat) {
-        throw 'Chat not found';
-      }
-
-      await this.save(chat);
+      return this.save(chat);
     } catch (error) {
       this.logger.error(error);
 

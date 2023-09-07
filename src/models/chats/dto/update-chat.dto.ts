@@ -1,8 +1,22 @@
-import { Message } from '../../messages/entities/message.entity';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdateChatDto {
-  //   @IsArray()
-  //   members: string[];
+  @IsArray()
+  @ArrayMinSize(2)
+  @IsOptional()
+  participants: string[];
 
-  message: Message;
+  @IsString()
+  @IsOptional()
+  name: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_group: boolean;
 }
